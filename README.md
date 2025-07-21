@@ -40,16 +40,10 @@ Great for:
    ```
 ## Dependancies
 
-**ctypes :**
+**This uses A few modules to run, install all of them with**
    ```bash
    pip install ctypes
-   ```
-**os :**
-   ```bash
    pip install os
-   ```
-**PIL :**
-   ```bash
    pip install PIL
    ```
 ---
@@ -125,6 +119,7 @@ Returns `(width, height)` of selected screen. Returns `None` if the monitor inde
 - `main.dll` → Compiled DLL
 - `directpx.py` → Python wrapper
 - `test.py` → Example/test file
+- `compile.txt`
 
 ---
 
