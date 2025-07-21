@@ -1,3 +1,3 @@
-cd C:\Users\Iyoukeen\Direct-px
+cd C:\Users\**user**\Direct-px
 
 gcc -m64 -shared -o main.dll main.c -Wl,--out-implib,libmain.a -lgdi32 -luser32 -ldwmapi
