@@ -1,16 +1,16 @@
 ```
-              ╔─────────────────────────────────────────────────────────────────────────────────────────────────╗
-              │                                                                                                 │
-              │   ██████████    ███                               █████               ███████████  █████ █████  │
-              │  ░░███░░░░███  ░░░                               ░░███               ░░███░░░░░███░░███ ░░███   │
-              │   ░███   ░░███ ████  ████████   ██████   ██████  ███████              ░███    ░███ ░░███ ███    │
-              │   ░███    ░███░░███ ░░███░░███ ███░░███ ███░░███░░░███░    ██████████ ░██████████   ░░█████     │
-              │   ░███    ░███ ░███  ░███ ░░░ ░███████ ░███ ░░░   ░███    ░░░░░░░░░░  ░███░░░░░░     ███░███    │
-              │   ░███    ███  ░███  ░███     ░███░░░  ░███  ███  ░███ ███            ░███          ███ ░░███   │
-              │   ██████████   █████ █████    ░░██████ ░░██████   ░░█████             █████        █████ █████  │
-              │  ░░░░░░░░░░   ░░░░░ ░░░░░      ░░░░░░   ░░░░░░     ░░░░░             ░░░░░        ░░░░░ ░░░░░   │
-              │                                                                                                 │
-              ╚─────────────────────────────────────────────────────────────────────────────────────────────────╝
+╔─────────────────────────────────────────────────────────────────────────────────────────────────╗
+│                                                                                                 │
+│   ██████████    ███                               █████               ███████████  █████ █████  │
+│  ░░███░░░░███  ░░░                               ░░███               ░░███░░░░░███░░███ ░░███   │
+│   ░███   ░░███ ████  ████████   ██████   ██████  ███████              ░███    ░███ ░░███ ███    │
+│   ░███    ░███░░███ ░░███░░███ ███░░███ ███░░███░░░███░    ██████████ ░██████████   ░░█████     │
+│   ░███    ░███ ░███  ░███ ░░░ ░███████ ░███ ░░░   ░███    ░░░░░░░░░░  ░███░░░░░░     ███░███    │
+│   ░███    ███  ░███  ░███     ░███░░░  ░███  ███  ░███ ███            ░███          ███ ░░███   │
+│   ██████████   █████ █████    ░░██████ ░░██████   ░░█████             █████        █████ █████  │
+│  ░░░░░░░░░░   ░░░░░ ░░░░░      ░░░░░░   ░░░░░░     ░░░░░             ░░░░░        ░░░░░ ░░░░░   │
+│                                                                                                 │
+╚─────────────────────────────────────────────────────────────────────────────────────────────────╝
 ```
 
 **Direct-PX** — *Fast, flexible, and freakishly fun Windows screen overlay toolkit in Python.*
@@ -21,8 +21,6 @@
 
 **Direct-PX** is a minimal Python wrapper for a Windows DLL that lets you draw pixels **directly** to the screen.
 
-No dependencies, unless you are using the image related things, then Pillow may be required.
-
 Great for:
 - Custom HUDs and overlays
 - Realtime pixel effects (scanlines, CRT, pixelation, etc)
@@ -32,17 +30,27 @@ Great for:
 ---
 
 ## Installation
-###As for now:
+**As for now:**
 1. Clone this repo or download the files.
-2. Make sure `main.dll` is compiled and placed next to `directpx.py`.
-3. Install Pillow if needed:  
-   ```bash
-   pip install pillow
-   ```
-###later in time this may become a module and be installed with
+2. Make sure `main.dll` is placed next to `directpx.py`.
 
+**later in time this may become a module and be installed with:**
    ```bash
    pip install directpx
+   ```
+## Dependancies
+
+**ctypes :**
+   ```bash
+   pip install ctypes
+   ```
+**os :**
+   ```bash
+   pip install os
+   ```
+**PIL :**
+   ```bash
+   pip install PIL
    ```
 ---
 
@@ -128,18 +136,6 @@ Returns `(width, height)` of selected screen. Returns `None` if the monitor inde
 ---
 >[!Warning]
 >## Potensial Issues
->This is still under development so many things may not work,
+>This is still under development so many things may not work!
 
 ---
-
-## ❤Credits
-
-- Uses `UpdateLayeredWindow`, GDI, and Windows APIs.
-- `stb_image.h` by Sean Barrett for image loading.
-- Python + ctypes + a refusal to do things the normal way.
-
----
-
-## ☕ License
-
-MIT. Do what thou wilt. Credit appreciated but not required.
