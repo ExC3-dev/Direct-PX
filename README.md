@@ -119,14 +119,9 @@ Returns `(width, height)` of selected screen. Returns `None` if the monitor inde
 - `main.dll` → Compiled DLL
 - `directpx.py` → Python wrapper
 - `test.py` → Example/test file
-- `compile.txt`
-
----
-
-## Tips
-
-- Capture underlaying screen with `get_screen_unedited()`
-- Alpha values matter: use `draw_box(..., a)` to control transparency.
+- `compile.txt` → Commands to compile main.c
+- `libmain.a` → Lib file
+- `stb_image.h` → Image library
 
 ---
 >[!Warning]
