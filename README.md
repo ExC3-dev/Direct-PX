@@ -74,11 +74,11 @@ directpx.close()
 ### Overlay Management
 | Function | Description |
 |---------|-------------|
-| `init(width, height)` | Initialize overlay window. |
+| `init(width, height)` | Initializes Program. |
 | `update()` | Push changes to screen. |
 | `clear()` | Clear current frame. |
-| `close()` | Destroy the overlay. |
-| `show()` / `hide()` | Show/hide the overlay. |
+| `close()` | Destroy the edits. |
+| `show()` / `hide()` | Show/hide the changes. |
 
 ---
 
@@ -95,8 +95,8 @@ directpx.close()
 | Function | Description |
 |---------|-------------|
 | `get_mouse()` | Returns `(x, y)` of cursor. |
-| `get_screen(as_image=True)` | Captures screen *including* overlay. Can be `PIL.Image`. |
-| `get_screen_unedited(as_image=True)` | Captures screen *excluding* overlay. Can be `PIL.Image`. |
+| `get_screen(as_image=True)` | Captures screen *including* changes. Can be `PIL.Image`. |
+| `get_screen_unedited(as_image=True)` | Captures screen *excluding* changes. Can be `PIL.Image`. |
 
 ---
 
