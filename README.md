@@ -13,13 +13,13 @@
 ╚─────────────────────────────────────────────────────────────────────────────────────────────────╝
 ```
 
-**Direct-PX** — *Fast, flexible, and freakishly fun Windows screen overlay toolkit in Python.*
+**Direct-PX** — *Fast, Simple, and fun Windows screen overlay toolkit in Python.*
 
 ---
 
 ## What is this?
 
-**Direct-PX** is a minimal Python wrapper for a Windows DLL that lets you draw pixels **directly** to the screen.
+**Direct-PX** is a minimal Python Module that uses a Windows DLL that lets you draw pixels **directly** to the screen.
 
 Great for:
 - Custom HUDs and overlays
@@ -38,7 +38,7 @@ Great for:
    ```bash
    pip install directpx
    ```
-## Dependancies
+## Dependencies
 
 **This uses A few modules to run, install all of them with**
    ```bash
@@ -95,8 +95,8 @@ directpx.close()
 | Function | Description |
 |---------|-------------|
 | `get_mouse()` | Returns `(x, y)` of cursor. |
-| `get_screen(as_image=True)` | Gets current overlay as `PIL.Image`. |
-| `get_screen_unedited(as_image=True)` | Captures screen *excluding* overlay. |
+| `get_screen(as_image=True)` | Captures screen *including* overlay. Can be `PIL.Image`. |
+| `get_screen_unedited(as_image=True)` | Captures screen *excluding* overlay. Can be `PIL.Image`. |
 
 ---
 
@@ -126,6 +126,9 @@ Returns `(width, height)` of selected screen. Returns `None` if the monitor inde
 ---
 >[!Warning]
 >## Potensial Issues
->This is still under development so many things may not work!
-
+>
+>*This is still under development so many things may not work!*
+>
+>**This module was only tested on Windows 11 and may not work in older versions.**
+>**And also this was only *Built* For Windows and most likely break on other systems.**
 ---
