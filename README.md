@@ -127,6 +127,8 @@ Returns `(width, height)` of selected screen. Returns `None` if the monitor inde
 >[!Warning]
 >## Potensial Issues
 >
+>**This can crash randomly *sometimes*.**
+>
 >*This is still under development so many things may not work!*
 >
 >**This module was only tested on Windows 11 and may not work in older versions.**
