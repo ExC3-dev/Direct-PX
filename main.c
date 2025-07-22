@@ -3,17 +3,24 @@
 #include <windows.h>
 #include <string.h>
 #include <wingdi.h>
-
 #include <dwmapi.h>
-#pragma comment(lib, "dwmapi.lib")
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include <windows.h>
+#pragma comment(lib, "dwmapi.lib")
 
 #define ERR_OK 0
 #define ERR_INVALID_SIZE -1
+#define ERR_NOT_INITIALIZED -2
+#define ERR_LOAD_IMAGE -3
+#define ERR_DRAW_TEXT -4
+
+static int screenW = 0, screenH = 0;
+static HINSTANCE hInst;
+static HWND hwnd;
+static HDC hdcScreen, hdcMem;
+static HBITMAP hBitmap;
+static void* bits = NULL;
 
 typedef struct {
     int targetIndex;
@@ -35,27 +42,13 @@ BOOL CALLBACK EnumMonitorCallback(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprc
     return TRUE;
 }
 
-#define ERR_OK 0
-#define ERR_INVALID_SIZE -1
-#define ERR_NOT_INITIALIZED -2
-#define ERR_LOAD_IMAGE -3
-#define ERR_DRAW_TEXT -4
-
-static int screenW = 0, screenH = 0;
-static HINSTANCE hInst;
-static HWND hwnd;
-static HDC hdcScreen, hdcMem;
-static HBITMAP hBitmap;
-static void* bits = NULL;
-
-__declspec(dllexport)
-int init(int width, int height) {
+__declspec(dllexport) int init(int width, int height) {
     if (width <= 0 || height <= 0) return ERR_INVALID_SIZE;
     screenW = width;
     screenH = height;
     hInst = GetModuleHandle(NULL);
 
-    WNDCLASS wc = {0};
+    WNDCLASS wc = { 0 };
     wc.lpfnWndProc = DefWindowProc;
     wc.hInstance = hInst;
     wc.lpszClassName = "OverlayWindowClass";
@@ -73,7 +66,7 @@ int init(int width, int height) {
     hdcScreen = GetDC(NULL);
     hdcMem = CreateCompatibleDC(hdcScreen);
 
-    BITMAPINFO bmi = {0};
+    BITMAPINFO bmi = { 0 };
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = screenW;
     bmi.bmiHeader.biHeight = -screenH;
@@ -89,15 +82,13 @@ int init(int width, int height) {
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int clear() {
+__declspec(dllexport) int clear() {
     if (!bits) return ERR_NOT_INITIALIZED;
     memset(bits, 0, screenW * screenH * 4);
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int draw_box(int x, int y, int w, int h, int r, int g, int b, int a) {
+__declspec(dllexport) int draw_box(int x, int y, int w, int h, int r, int g, int b, int a) {
     if (!bits) return ERR_NOT_INITIALIZED;
     if (w <= 0 || h <= 0) return ERR_INVALID_SIZE;
     for (int j = 0; j < h; ++j) {
@@ -115,8 +106,7 @@ int draw_box(int x, int y, int w, int h, int r, int g, int b, int a) {
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int draw_text(int x, int y, const char* text, int r, int g, int b) {
+__declspec(dllexport) int draw_text(int x, int y, const char* text, int r, int g, int b) {
     if (!hdcMem || !text) return ERR_NOT_INITIALIZED;
     SetTextColor(hdcMem, RGB(r, g, b));
     SetBkMode(hdcMem, TRANSPARENT);
@@ -124,8 +114,7 @@ int draw_text(int x, int y, const char* text, int r, int g, int b) {
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int draw_image(int x, int y, int w, int h, const char* path) {
+__declspec(dllexport) int draw_image(int x, int y, int w, int h, const char* path) {
     if (!hdcMem || !path) return ERR_NOT_INITIALIZED;
 
     int imgW, imgH, channels;
@@ -159,21 +148,17 @@ int draw_image(int x, int y, int w, int h, const char* path) {
     return ERR_OK;
 }
 
-
-__declspec(dllexport)
-int update() {
+__declspec(dllexport) int update() {
     if (!hwnd) return ERR_NOT_INITIALIZED;
-    POINT ptSrc = {0, 0};
-    SIZE sizeWnd = {screenW, screenH};
-    BLENDFUNCTION blend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
-    POINT ptDst = {0, 0};
-    BOOL res = UpdateLayeredWindow(hwnd, hdcScreen, &ptDst, &sizeWnd,
-                                   hdcMem, &ptSrc, 0, &blend, ULW_ALPHA);
+    POINT ptSrc = { 0, 0 };
+    SIZE sizeWnd = { screenW, screenH };
+    BLENDFUNCTION blend = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
+    POINT ptDst = { 0, 0 };
+    BOOL res = UpdateLayeredWindow(hwnd, hdcScreen, &ptDst, &sizeWnd, hdcMem, &ptSrc, 0, &blend, ULW_ALPHA);
     return res ? ERR_OK : ERR_NOT_INITIALIZED;
 }
 
-__declspec(dllexport)
-int close() {
+__declspec(dllexport) int close() {
     if (hBitmap) DeleteObject(hBitmap);
     if (hdcMem) DeleteDC(hdcMem);
     if (hdcScreen) ReleaseDC(NULL, hdcScreen);
@@ -184,22 +169,19 @@ int close() {
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int show() {
+__declspec(dllexport) int show() {
     if (!hwnd) return ERR_NOT_INITIALIZED;
     ShowWindow(hwnd, SW_SHOW);
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int hide() {
+__declspec(dllexport) int hide() {
     if (!hwnd) return ERR_NOT_INITIALIZED;
     ShowWindow(hwnd, SW_HIDE);
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int get_mouse(int* x, int* y) {
+__declspec(dllexport) int get_mouse(int* x, int* y) {
     if (!x || !y) return ERR_INVALID_SIZE;
     POINT pt;
     if (GetCursorPos(&pt)) {
@@ -210,9 +192,7 @@ int get_mouse(int* x, int* y) {
     return ERR_NOT_INITIALIZED;
 }
 
-
-__declspec(dllexport)
-int get_screen_size(int monitor, int* width, int* height) {
+__declspec(dllexport) int get_screen_size(int monitor, int* width, int* height) {
     if (!width || !height) return ERR_INVALID_SIZE;
 
     if (monitor == 0) {
@@ -226,7 +206,7 @@ int get_screen_size(int monitor, int* width, int* height) {
         return ERR_OK;
     }
     else if (monitor > 1) {
-        MonitorEnumData data = { .targetIndex = monitor - 1, .currentIndex = 0, .found = 0, .width = 0, .height = 0 };
+        MonitorEnumData data = { .targetIndex = monitor - 1, .currentIndex = 0, .found = 0 };
         if (!EnumDisplayMonitors(NULL, NULL, EnumMonitorCallback, (LPARAM)&data) || !data.found) {
             return ERR_INVALID_SIZE;
         }
@@ -237,9 +217,7 @@ int get_screen_size(int monitor, int* width, int* height) {
     return ERR_INVALID_SIZE;
 }
 
-
-__declspec(dllexport)
-int get_screen(unsigned char* outBuffer, int bufferSize) {
+__declspec(dllexport) int get_screen(unsigned char* outBuffer, int bufferSize) {
     if (!bits || !outBuffer) return ERR_NOT_INITIALIZED;
     int dataSize = screenW * screenH * 4;
     if (bufferSize < dataSize) return ERR_INVALID_SIZE;
@@ -247,13 +225,11 @@ int get_screen(unsigned char* outBuffer, int bufferSize) {
     return ERR_OK;
 }
 
-__declspec(dllexport)
-int get_screen_unedited(unsigned char* outBuffer, int bufferSize) {
+__declspec(dllexport) int get_screen_unedited(unsigned char* outBuffer, int bufferSize) {
     if (!hwnd) return ERR_NOT_INITIALIZED;
 
     BOOL exclude = TRUE;
-    DwmSetWindowAttribute(hwnd, 17 /* DWMWA_EXCLUDED_FROM_CAPTURE */, &exclude, sizeof(exclude));
-
+    DwmSetWindowAttribute(hwnd, 17, &exclude, sizeof(exclude));
     Sleep(10);
 
     HDC hdcSrc = GetDC(NULL);
@@ -283,10 +259,8 @@ int get_screen_unedited(unsigned char* outBuffer, int bufferSize) {
         DeleteObject(hTmpBmp);
         DeleteDC(hdcTmp);
         ReleaseDC(NULL, hdcSrc);
-
         BOOL excludeOff = FALSE;
         DwmSetWindowAttribute(hwnd, 17, &excludeOff, sizeof(excludeOff));
-
         return ERR_INVALID_SIZE;
     }
 
