@@ -125,7 +125,7 @@ Returns `(width, height)` of selected screen. Returns `None` if the monitor inde
 
 ---
 >[!Warning]
->## Potensial Issues
+>## Potential Issues
 >
 >**This can crash randomly *sometimes*.**
 >
